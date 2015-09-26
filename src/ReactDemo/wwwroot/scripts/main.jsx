@@ -36,13 +36,26 @@ var CommentList = React.createClass({
 });
 
 var CommentForm = React.createClass({
+    handleSubmit: function(e){
+        e.preventDefault();
+        var author = React.findDOMNode(this.refs.name).value.trim();
+        var text = React.findDOMNode(this.refs.comment).value.trim();
+        if (!text || !author) {
+            // validate
+            return;
+        }
+        this.props.onCommentSubmit({ author: author, text: text });
+        React.findDOMNode(this.refs.name).value = '';
+        React.findDOMNode(this.refs.comment).value = '';
+        return;
+    },
     render: function () {
         return (
-            <form className="comment__form">
-                <div class="rows">
+            <form className="comment__form" onSubmit={this.handleSubmit}>
+                <div className="rows">
                     <input className="u-full-width" ref="name" type="text" placeholder="Your name" />
                 </div>
-                <div class="rows">
+                <div className="rows">
                     <textarea className="u-full-width" ref="comment" cols="20" rows="3" placeholder="Your thoughts"></textarea>
                 </div>
                 <input className="button-primary" type="submit" value="Post" />
@@ -65,6 +78,11 @@ var CommentBox = React.createClass({
             }.bind(this)
         });
     },
+    handleCommentSubmit: function (comment) {
+        var comments = this.state.data;
+        comments.push(comment);
+        this.setState({ data: comments });
+    },
     getInitialState: function () {
         return { data: [] };
     },
@@ -77,7 +95,7 @@ var CommentBox = React.createClass({
             <div className="comment">
                 <h3>Comments</h3>
                 <CommentList data={ this.state.data } />
-                <CommentForm />
+                <CommentForm onCommentSubmit={this.handleCommentSubmit} />
             </div>
         );
     }
