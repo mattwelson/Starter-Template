@@ -36,6 +36,9 @@ var CommentList = React.createClass({
 });
 
 var CommentForm = React.createClass({
+    getInitialState: function(){
+        return { commentMd: '' };
+    },
     handleSubmit: function(e){
         e.preventDefault();
         var author = React.findDOMNode(this.refs.name).value.trim();
@@ -49,6 +52,12 @@ var CommentForm = React.createClass({
         React.findDOMNode(this.refs.comment).value = '';
         return;
     },
+    handleChange: function(){
+        this.setState({commentMd: React.findDOMNode(this.refs.comment).value});
+    },
+    rawMarkup: function(){
+        return { __html: marked(this.state.commentMd, {sanitize: true})};
+    },
     render: function () {
         return (
             <form className="comment__form" onSubmit={this.handleSubmit}>
@@ -56,9 +65,12 @@ var CommentForm = React.createClass({
                     <input className="u-full-width" ref="name" type="text" placeholder="Your name" />
                 </div>
                 <div className="rows">
-                    <textarea className="u-full-width" ref="comment" cols="20" rows="3" placeholder="Your thoughts"></textarea>
+                    <textarea className="u-full-width" ref="comment" cols="20" rows="3" 
+                              onChange={this.handleChange}
+                              placeholder="Your thoughts"></textarea>
                 </div>
                 <input className="button-primary" type="submit" value="Post" />
+                <div className="output" dangerouslySetInnerHTML={this.rawMarkup()}></div>
             </form>
         );
     }
