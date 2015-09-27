@@ -4,3 +4,22 @@
 textarea {
     resize:vertical;
 }
+
+.header {
+    margin-top:5em;
+}
+
+
+.nav {
+    border: {
+        top: solid 1px grey;
+        bottom: solid 1px grey;
+    }
+    padding: {
+        top:1em;
+        bottom:1em;
+    }
+}
+.u-align-right {
+    text-align:right;
+}
